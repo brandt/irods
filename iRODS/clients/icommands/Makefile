@@ -173,10 +173,16 @@ LDFLAGS +=      $(LIBRARY) $(MODULE_LDFLAGS) $(CL_LDADD)
 
 ifdef GSI_AUTH
 
-ifeq ($(GSI_INSTALL_TYPE),)
-  $GSI_INSTALL_TYPE2=
+ifeq ($(ADDR_64BITS), 1)
+GSI_LIB_DIR=lib64
 else
-  $GSI_INSTALL_TYPE2=_$(GSI_INSTALL_TYPE)
+GSI_LIB_DIR=lib
+endif
+
+ifeq ($(GSI_INSTALL_TYPE),)
+GSI_INSTALL_TYPE2=
+else
+GSI_INSTALL_TYPE2=_$(GSI_INSTALL_TYPE)
 endif
 
 # GSI_SSL is set to ssl to use the system's SSL library, else use
@@ -192,11 +198,11 @@ GSI_CRYPTO = crypto$(GSI_INSTALL_TYPE2)
 endif
 
 LIB_GSI_AUTH = \
-        -L$(GLOBUS_LOCATION)/lib \
-        -lglobus_gss_assist$(GSI_INSTALL_TYPE2) \
+      -L$(GLOBUS_LOCATION)/$(GSI_LIB_DIR) \
+      -lglobus_gss_assist$(GSI_INSTALL_TYPE2) \
       -lglobus_gssapi_gsi$(GSI_INSTALL_TYPE2) \
-        -lglobus_gsi_credential$(GSI_INSTALL_TYPE2) \
-        -lglobus_gsi_proxy_core$(GSI_INSTALL_TYPE2) \
+      -lglobus_gsi_credential$(GSI_INSTALL_TYPE2) \
+      -lglobus_gsi_proxy_core$(GSI_INSTALL_TYPE2) \
       -lglobus_gsi_callback$(GSI_INSTALL_TYPE2) \
       -lglobus_oldgaa$(GSI_INSTALL_TYPE2) \
       -lglobus_gsi_sysconfig$(GSI_INSTALL_TYPE2) \
